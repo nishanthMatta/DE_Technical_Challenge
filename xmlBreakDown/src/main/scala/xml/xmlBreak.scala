@@ -26,7 +26,6 @@ object xmlBreak {
 
     breakdownDF.show()
     breakdownDF.printSchema()
-    //val sepdf = explodeDF.flatMap(x=>x.(","))
 
     val titleDF = breakdownDF.select("item.title")
     titleDF.show(4,truncate = false)
