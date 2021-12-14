@@ -2,8 +2,6 @@ package xml
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions.{col, explode, split}
 import org.apache.spark.{SparkConf, SparkContext}
-import org.apache.hadoop.fs._
-
 
 object xmlBreak {
   def main(arg: Array[String]): Unit = {
@@ -24,8 +22,6 @@ object xmlBreak {
 
     val breakdownDF = channelDF.withColumn("item",explode(col("item")))
 
-    breakdownDF.show()
-    breakdownDF.printSchema()
 
     val titleDF = breakdownDF.select("item.title")
     titleDF.show(4,truncate = false)
