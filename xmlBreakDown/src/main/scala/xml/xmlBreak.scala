@@ -11,6 +11,7 @@ object xmlBreak {
 
     val spark = SparkSession.builder().getOrCreate()
 
+    //Reading the xml file, make sure the xml is located in the path
     val url_df = spark.read
       .format("com.databricks.spark.xml")
       .option("rowTag","rss")
@@ -19,7 +20,10 @@ object xmlBreak {
     url_df.printSchema()
 
     val channelDF = url_df.select("channel.item")
-
+    /*Item attribute is broken down to get access to its internal attributes.
+    Top Stories is present within Item (array). In order to present Top Stories,
+    Item is broken to Struct for better accessibility
+     */
     val breakdownDF = channelDF.withColumn("item",explode(col("item")))
 
 
@@ -27,6 +31,9 @@ object xmlBreak {
     titleDF.show(4,truncate = false)
     titleDF.printSchema()
 
+    /*Top Stories is broken into 2 columns. Select API will allow to print only required columns.
+    Change the split condition to change the column attributes.
+     */
     val splitCol = titleDF.select(
       split(col("title")," - ").getItem(1).as("Department"),
       split(col("title")," - ").getItem(2).as("Feed"))
